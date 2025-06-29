@@ -1,0 +1,9 @@
+[Plymouth Theme]
+Name=Tuxsona
+Description=A plymouth based on the persona 5 saga
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/tuxsona/images
+ScriptFile=/usr/share/plymouth/themes/tuxsona/tuxsona.script
+ConsoleLogTextColor=0xFFFFFF

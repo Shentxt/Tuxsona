@@ -1,0 +1,89 @@
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+screen.w = Window.GetWidth(0);
+screen.h = Window.GetHeight(0);
+screen.half.w = Window.GetWidth(0) / 2;
+screen.half.h = Window.GetHeight(0) / 2;
+
+question = null;
+answer = null;
+message = null;
+
+bullets = null;
+prompt = null;
+bullet.image = Image.Text("*", 1, 1, 1);
+
+state.status = "play";
+state.time = 0.0;
+
+# Cycle through all images
+for (i = 0; i < 42; i++)
+  flyingman_image[i] = Image("progress-" + i + ".png");
+
+flyingman_sprite = Sprite();
+
+# Set image position
+flyingman_sprite.SetX(Window.GetX() + (Window.GetWidth(0) / 2 - flyingman_image[0].GetWidth() / 2));
+flyingman_sprite.SetY(Window.GetY() + (Window.GetHeight(0) / 2 - flyingman_image[0].GetHeight() / 2));
+
+progress = 0;
+
+fun on_refresh () {
+    flyingman_sprite.SetImage(flyingman_image[Math.Int(progress / 2) % 42]);
+    progress++;
+}
+
+fun on_display_normal() {
+    state.status = "play";
+    bullets = null;
+    prompt = null;
+    message = null;
+    question = null;
+    answer = null;
+}
+
+fun on_password(nil, bulletCount) {
+    state.status = "pause";
+    totalWidth = bulletCount * bullet.image.GetWidth();
+    startPos = screen.half.w - totalWidth / 2;
+    
+    prompt.image = Image("password.png");
+    prompt.sprite = Sprite(prompt.image);
+    prompt.sprite.SetZ(100);
+
+    // Clear all bullets (user might hit backspace)
+    bullets = null;
+    for (i = 0; i < bulletCount; i++) {
+        bullets[i].sprite = Sprite(bullet.image);
+        bullets[i].sprite.SetX(startPos + i * bullet.image.GetWidth());
+        bullets[i].sprite.SetY(screen.h - 2 * bullet.image.GetHeight());
+    }
+}
+
+// TODO: Question
+
+fun on_display_question(prompt, entry) {
+    question = null;
+    answer = null;
+
+    if (entry == "")
+        entry = "<answer>";
+
+    answer.image = Image.Text(entry, 1, 1, 1);
+    answer.sprite = Sprite(answer.image);
+    answer.sprite.SetX(screen.half.w - answer.image.GetWidth() / 2);
+    answer.sprite.SetY(screen.h - 2 * answer.image.GetHeight());
+}
+
+fun on_message(text) {
+    message.image = Image.Text(text, 1, 1, 1);
+    message.sprite = Sprite(message.image);
+    message.sprite.SetPosition(screen.half.w - message.image.GetWidth() / 2, message.image.GetHeight());
+}
+
+Plymouth.SetDisplayNormalFunction(on_display_normal);
+Plymouth.SetRefreshFunction (on_refresh);
+Plymouth.SetDisplayPasswordFunction(on_password);
+Plymouth.SetDisplayQuestionFunction(on_display_question);
+Plymouth.SetMessageFunction(on_message);
