@@ -22,6 +22,6 @@ Use `--configure` to configure Plymouth automatically.
 
 <p align="center">
   <picture>
-    <img src="./demo.mp4">
+    <img src="./demo.gif">
   </picture>
 </p>
